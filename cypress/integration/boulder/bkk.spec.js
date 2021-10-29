@@ -17,7 +17,6 @@ describe('attempting to book a slot in BKK', () => {
         .click();
 
       const [day] = date.split('.');
-      debugger;
 
       cy.get('.drp-calendar-day-dates')
         .should('be.visible')
