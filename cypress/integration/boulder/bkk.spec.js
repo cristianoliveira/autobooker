@@ -12,8 +12,8 @@ describe('attempting to book a slot in BKK', () => {
       it('booking', () => {
         cy.get('.uk-navbar-nav', { timeout: 5000 })
           .should('be.visible')
-          .find(':nth-child(8)')
           .find('a')
+          .contains('buchen')
           .click();
 
         cy.get('.drp-calendar-day-dates')
@@ -49,8 +49,8 @@ describe('attempting to book a slot in BKK', () => {
 
         cy.get('form')
           .find('.drp-course-booking-continue')
-          .should('be.visible');
-        // .click();
+          .should('be.visible')
+          .click();
       });
     }
   );

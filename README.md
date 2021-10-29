@@ -13,10 +13,16 @@ This is a toy project to automate bookings
 yarn
 
 # Opens cypress ui with options.
-yarn open --env date="31.10.21",time="10:30 - 12:30"  
+yarn open --env date="31.10.21",time="10:30 - 12:30"
 # Run the script as a CLI
 yarn book:boulder:bkk --env date="31.10.21",time="10:30 - 12:30"
 ```
+
+### Personal Data for the bookings
+
+Each script requires a different set of data. In order to add your personal
+data for a given booking look in `/cypress/fixtures/*.examples`. Rename then into
+a JSON file and fill it out with your data.
 
 # License
 
