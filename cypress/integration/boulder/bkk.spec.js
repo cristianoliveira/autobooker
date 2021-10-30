@@ -1,11 +1,15 @@
 import { person } from '../../fixtures/bkk.json';
 
+const forEach = (countDiff, fn) =>
+  Array.from({ length: countDiff }, (x, i) => i).forEach(fn);
+
 describe('attempting to book a slot in BKK', () => {
-  let date, time;
+  let date, time, hasToConfirm;
   beforeEach(() => {
     cy.visit('https://boulderklub.de/');
     date = Cypress.env('date');
     time = Cypress.env('time');
+    hasToConfirm = Cypress.env('confirm');
   });
 
   describe(`booking new slot for ${person.name} in ${date},${time}`, () => {
@@ -16,11 +20,23 @@ describe('attempting to book a slot in BKK', () => {
         .contains('buchen')
         .click();
 
-      const [day] = date.split('.');
+      const today = new Date();
+
+      const [day, month, year] = date.split('.');
+      const bookingDate = new Date(`${month}/${day}/${year}`);
+
+      const monthDiff = bookingDate.getMonth() - today.getMonth();
+      if (monthDiff > 0) {
+        forEach(monthDiff, () => {
+          cy.get('.drp-course-month-selector-next').click();
+        });
+      }
+
+      cy.get('.drp-claendar').should('be.visible');
 
       cy.get('.drp-calendar-day-dates')
         .should('be.visible')
-        .contains(day)
+        .contains(Number(day))
         .click();
 
       cy.get('.drp-course-date-item')
@@ -49,10 +65,12 @@ describe('attempting to book a slot in BKK', () => {
       cy.get('form').find('#drp-course-booking-client-terms-cb').click();
       cy.get('form').find('#drp-course-booking-data-processing-cb').click();
 
-      cy.get('form')
-        .find('.drp-course-booking-continue')
-        .should('be.visible')
-        .click();
+      if (!hasToConfirm) {
+        cy.get('form')
+          .find('.drp-course-booking-continue')
+          .should('be.visible')
+          .click();
+      }
     });
   });
 });
